@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="TodoExtension.ToolWindows.TodoItemWindowControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:b="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:TodoExtension.ToolWindows"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="600"
+             Name="TodoItemWindow"
+             d:DataContext="{d:DesignInstance local:TodoItemViewModel, IsDesignTimeCreatable=True}">
+
+    <UserControl.Resources>
+        <ObjectDataProvider MethodName="GetValues"
+                        ObjectType="{x:Type sys:Enum}"
+                        x:Key="ScopeEnumValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:Scope"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Vertical" Margin="5">
+        <StackPanel Orientation="Horizontal" Margin="0 0 0 5">
+            <ComboBox ItemsSource="{Binding Source={StaticResource ScopeEnumValues}}" SelectedItem="{Binding SelectedScope}">
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="SelectionChanged">
+                        <b:InvokeCommandAction Command="{Binding ScopeSelectionChangedCommand}" />
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
+            </ComboBox>
+        </StackPanel>
+
+        <ListView ItemsSource="{Binding TodoItems}" SelectedItem="{Binding SelectedTodoItem}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="" Width="40">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="../Resources/todo_16.png" Width="16" Height="16"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Path=Description}"/>
+                    <GridViewColumn Header="Project" DisplayMemberBinding="{Binding Path=Project}"/>
+                    <GridViewColumn Header="File" DisplayMemberBinding="{Binding Path=FileName}"/>
+                    <GridViewColumn Header="Line" DisplayMemberBinding="{Binding Path=LineNumber}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </StackPanel>
+
+</UserControl>
